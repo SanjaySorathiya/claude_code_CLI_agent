@@ -1,8 +1,9 @@
 import { Command } from "commander";
+import { printBanner } from "./ui/banner.js";
 
 export function createCli() {
   const program = new Command()
-    .name("cursor-cli")
+    .name("claude-agent-cli")
     .description("The Claude Agent SDK through a Cursor-like CLI")
     .version("0.1.0");
 
@@ -12,6 +13,13 @@ export function createCli() {
     .action(() => {
       console.log("Hello World");
     });
+
+    program
+      .command("banner")
+      .description("Show the welcome banner")
+      .action(() => {
+        printBanner();
+      });    
 
   program.action(() => {
     program.help();
