@@ -5,6 +5,7 @@ import chalk from "chalk";
 import { runQuery } from "./agent/run-query.js";
 import { CliMode, parseCliMode } from "./agent/modes.js";
 import { startChat } from "./commands/chat.js";
+import { wakeUp } from "./commands/wake-up.js";
 
 function parseMode(value: string): CliMode {
   const mode = parseCliMode(value);
@@ -16,8 +17,8 @@ function parseMode(value: string): CliMode {
 
 export function createCli() {
   const program = new Command()
-    .name("claude-agent-cli")
-    .description("The Claude Agent SDK through a Cursor-like CLI")
+    .name("cursor-cli")
+    .description("Learn the Claude Agent SDK through a Cursor-like CLI")
     .version("0.1.0");
 
   program
@@ -29,19 +30,10 @@ export function createCli() {
 
   program
     .command("wakeup")
-    .description("Send a one-shot prompt to the agent")
-    .argument("<prompt>", "What to ask Claude")
-    .option("-m, --mode <mode>", "agent | ask | plan", "agent")
-    .option("-v, --verbose", "Show agent loop message types", false)
-    .action(
-      async (prompt: string, opts: { mode: string; verbose: boolean }) => {
-        requireApiKey();
-        await runQuery(prompt, {
-          mode: parseMode(opts.mode),
-          verbose: opts.verbose,
-        });
-      },
-    );
+    .description("Banner, preflight, mode picker, then chat")
+    .action(async () => {
+      await wakeUp();
+    });
 
   program
     .command("chat")
@@ -62,17 +54,14 @@ export function createCli() {
 
   program
     .command("doctor")
-    .description("Check environment is ready?")
+    .description("Check environment is ready")
     .action(async () => {
       const { execa } = await import("execa");
-
-      // NodeJS check
       const { stdout } = await execa("node", ["-v"]);
       if (Number(stdout.slice(1)) < 18) {
         throw new Error("Node.js version 18 or higher is required");
       }
-
-      // check key check
+      // 2. Check Anthropic API key is set
       const apiKey = requireApiKey();
       if (!apiKey) {
         throw new Error("ANTHROPIC_API_KEY is not set");
