@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="card">
+    <header>
+      <h1>My Tasks</h1>
+      <p id="summary" class="muted"></p>
+    </header>
+
+    <form id="todo-form">
+      <input id="todo-input" type="text" placeholder="Add a new task..." autocomplete="off" required />
+      <button type="submit" aria-label="Add task">+</button>
+    </form>
+
+    <nav class="filters">
+      <button data-filter="all" class="active">All</button>
+      <button data-filter="active">Active</button>
+      <button data-filter="completed">Completed</button>
+    </nav>
+
+    <ul id="todo-list"></ul>
+
+    <footer>
+      <button id="clear-completed" class="link">Clear completed</button>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
